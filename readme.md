@@ -48,15 +48,13 @@ Projekt ma na celu zrozumienie zależności między cechami mieszkań a ich cena
     3.3. [Analiza komponentów bazowych (PCA)](#analiza-komponentów-bazowych-pca)
     
 	3.4. [Wybór cech](#wybór-cech)
-4. [Modelowanie](#czynności-wstępne)
-
-	4.1. [SearchGrid](#gromadzenie-danych)
-
-	4.2. [Wybór najlepszego predyktora](#opis-danych)
-
-	4.3. [Ewaluacja wyników modelu](#weryfikacja-jakości-danych)
+4. [Modelowanie](#modelowanie)
+   
+	4.1. [Ewaluacja modeli](#ewaluacja-modeli)
+   
+   	4.2. [Wyniki predykcji](#wyniki-predykcji)
 5. [Wizualizacja danych w komponencie przestrzennym](#wizualizacja-danych-w-komponencie-przestrzennym)
-6. [Podsumowanie i wnioski](#czynności-wstępne)
+
 
 
 
@@ -544,24 +542,62 @@ są wyposażone w dedykowane miejsca postojowe.
 Na podstawie przeprowadzonych analiz, do budowy modeli wybrano następujące cechy: *area, price-per-area, floor/store, no of floors/stores in the building, no of rooms, year of construction, parking space, market, form of ownership, latitude, longitude distance* oraz *district*.
 
 
-### Wstępna eksploracja
+## Modelowanie
 
+Do predykcji cen mieszkań wykorzystano następujące modele:
+
+- regresja liniowa
+- drezwa decyzyjne
+- lasy losowe
+- Gradient Boosting Machine (GBM)
+- LightGBM
+- CatBoost
+- XGBoost
+
+Parametry powyższych modeli zostały dobrane  przy użyciu bayesowskiej optymalizacji hiperparametrów. 
+
+### Ewaluacja modeli
+
+Do oceny jakości predykcji modeli wykorzystano następujące metryki:
+
+- Średni błąd bezwzględny (Mean Absolute Error, MAE)
+- Pierwiastek z błędu średniokwadratowego (Root Mean Squared Error, RMSE)
+- Współczynnik determinacji (Coefficient of Determination, $R^2$ score)
+- Wskaźniki 10-procentowy i 20-procentowy (10% & 20% measure)
+
+### Wyniki predykcji
+![obraz](https://github.com/user-attachments/assets/2b038aed-de14-495d-9408-89eeba2b5cff)
+
+W powyższej tabeli uwzględniono dodatkowo wyniki modeli kombinowanych: 
+
+- Super-GB - model zwracający średnią predykcji wszystkich modeli gradientowych
+- Weighted Super-GB - model zwracający rednią ważoną predykcji pozostałych modeli gradientowych
 
 
 ## Wizualizacja danych w komponencie przestrzennym
 
+Dane o krakowskich mieszkaniach zostały zwizualizowane w komponencie przestrzennym na interaktywnej mapie za pomocą frameworku Streamlit.
 
+![screen1_price](https://github.com/user-attachments/assets/1409d842-1858-4062-976f-90e720fc01b4)
+Analiza cen nieruchomości w zależności od odległości od centrum Krakowa
 
-...
+![screen2_pricepa](https://github.com/user-attachments/assets/179bd37c-0d0a-4434-b29a-76122fa2f8e2)
+Analiza cen za metr kwadratowy nieruchomości w zależności od odległości od centrum Krakowa
 
+![screen3_area](https://github.com/user-attachments/assets/6cc5b237-31d9-43eb-baac-cd813bc48a9e)
+Analiza powierzchni nieruchomości w zależności od odległości od centrum Krakowa
 
-## Bibliografia
-<a id="1">[1]</a> R. Cellmer,
-Analiza przestrzenna dynamiki zmian cen nieruchomości lokalowych z wykorzystaniem regresji ważonej geograficznie.
-Acta Scientiarum Polonorum. Administratio Locorum (2010) 9/3, 5-14
+![screen4_age](https://github.com/user-attachments/assets/97697e51-5d36-4fd4-9230-2de4217f59d7)
+Analiza wieku budynków w zależności od odległości od centrum Krakowa
 
-<a id="2">[2]</a> M. Frukacz, M. Popieluch, E. Preweda,
-Korekta cen nieruchomości ze względu na upływ czasu w przypadku dużych baz danych.
-Infrastruktura i ekologia terenów wiejskich (2011) 4, 213-226
+![screen5_floors](https://github.com/user-attachments/assets/78c19817-30cc-470f-9c15-593c822be494)
+Analiza liczby pięter w budynkach w zależności od odległości od centrum Krakowa
+
+![screen6_parking](https://github.com/user-attachments/assets/ccfb0146-923c-4379-bcf6-61b41e0b1184)
+Analiza dostępności miejsc parkingowych w zależności od odległości od centrum Krakowa
+
+![screen7_offers](https://github.com/user-attachments/assets/d31286bc-1b1d-478a-88f1-a8a0440dd7f0)
+Analiza liczby ofert sprzedaży nieruchomości w zależności od odległości od centrum Krakowa
+
 
 
