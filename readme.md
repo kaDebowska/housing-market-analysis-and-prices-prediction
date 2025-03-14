@@ -27,7 +27,7 @@ The project aims to understand the relationship between apartment characteristic
 - Correlation matrix (identifying factors influencing real estate prices)  
 - Spatial analysis
 - Comparison of different models for predicting real estate prices based on selected features.
-- 
+
 
 ### (Expected) Results  
 - Understanding which real estate features have the most significant impact on listing prices in Kraków.  
