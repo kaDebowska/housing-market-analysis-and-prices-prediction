@@ -16,9 +16,10 @@ Projekt ma na celu zrozumienie zależności między cechami mieszkań a ich cena
    
 - **Dane**: Wykorzystano zbiór danych zawierający informacje o ofertach sprzedaży nieruchomości.
 - **Źródło danych**: Dane zostały wyekstrahowane za pomocą metod automatycznych z dwóch popularnych portali zawierających oferty sprzedaży nieruchomości.
-- **Przygotowanie danych**: Zrozumienie danych, usuwanie brakujących wartości, uspójnienie, konwersja formatów, uzupełnienie danych geograficznych (koordynatów) na postawie adresu, dodanie (wektora) odległości od centrum miasta (Rynku Głównego) na podstawie danych geograficznych itp. -- do ew. uzupełnienia w trakcie prac.
-- **(Proponowane) analizy i modelowanie**: Statystyka opisowa, regresja hedoniczna, macierz korelacji (identyfikacja czynników wpływających na cenę nieruchomości), analiza przestrzenna (regresja ważona geograficznie [[1]](#1)) itp.  -- do ew. uzupełnienia po konsultacjach i w trakcie prac.
-- **(Oczekiwane) wyniki**: Zrozumienie, które cechy nieruchomości najbardziej wpływają na cenę ofertową mieszkań w Krakowie, wykrycie ewentualnych trendów cenowych w poszczególnych dzielnicach itp. -- do ew. uzupełnienia w trakcie prac.
+- **Przygotowanie danych**: Zrozumienie danych, usuwanie brakujących wartości, uspójnienie, konwersja formatów, uzupełnienie danych geograficznych (koordynatów) na postawie adresu, dodanie (wektora) odległości od centrum miasta (Rynku Głównego) na podstawie danych geograficznych.
+- **Analizy**: Statystyka opisowa, regresja hedoniczna, macierz korelacji (identyfikacja czynników wpływających na cenę nieruchomości), analiza przestrzenna.
+- **Modelowanie**: Porównanie działania różnych modeli w zadaniu predykcji cen nieruchomości na podstawie wyselekcjonowanych cech.
+- **(Oczekiwane) wyniki**: Zrozumienie, które cechy nieruchomości najbardziej wpływają na cenę ofertową mieszkań w Krakowie, wykrycie ewentualnych trendów cenowych w poszczególnych dzielnicach.
 
 ### Spis treści
 1. [Zrozumienie danych](#zrozumienie-danych)
