@@ -548,7 +548,7 @@ Na podstawie przeprowadzonych analiz, do budowy modeli wybrano następujące cec
 Do predykcji cen mieszkań wykorzystano następujące modele:
 
 - regresja liniowa
-- drezwa decyzyjne
+- drzewa decyzyjne
 - lasy losowe
 - Gradient Boosting Machine (GBM)
 - LightGBM
