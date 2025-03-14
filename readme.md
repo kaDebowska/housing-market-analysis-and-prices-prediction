@@ -21,14 +21,13 @@ The project aims to understand the relationship between apartment characteristic
   - Supplementing geographic data (coordinates) based on addresses  
   - Adding a distance vector from the city center (Main Market Square) based on geographic data  
 
-### Analyses  
+### Analyses and Modeling
 - Descriptive statistics  
 - Hedonic regression  
 - Correlation matrix (identifying factors influencing real estate prices)  
-- Spatial analysis  
-
-### Modeling  
-- Comparison of different models for predicting real estate prices based on selected features.  
+- Spatial analysis
+- Comparison of different models for predicting real estate prices based on selected features.
+- 
 
 ### (Expected) Results  
 - Understanding which real estate features have the most significant impact on listing prices in Kraków.  
