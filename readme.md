@@ -1,78 +1,93 @@
-# Analiza cen nieruchomości w Krakowie
+# Analysis of Real Estate Prices in Kraków  
 
-Projekt w ramach zajęć **Eksploracja Danych** realizowany w semestrze letnim r.a. 2023/2024 na Wydziale Informatyki Akademii Górniczo-Hutniczej w Krakowie pod opieką dra Tomasza Pełecha-Pilichowskiego.
+A project conducted as part of the **Data Exploration** course during the summer semester of the 2023/2024 academic year at the Faculty of Computer Science, AGH University of Science and Technology in Kraków, under the supervision of Dr. Tomasz Pełecha-Pilichowski.  
+
+## Authors  
+- Katarzyna Dębowska  
+- Kacper Sobczyk  
+- Piotr Urbańczyk  
+
+## Abstract  
+The project aims to understand the relationship between apartment characteristics and their listing prices in the local real estate market. We will conduct descriptive statistics, hedonic regression, and spatial analysis to identify the key factors influencing apartment prices in Kraków.  
+
+### Data  
+- **Dataset**: A dataset containing information on real estate sale listings was used.  
+- **Data source**: The data was extracted using automated methods from two popular real estate listing platforms.  
+- **Data preparation**:  
+  - Understanding the data  
+  - Handling missing values  
+  - Standardization  
+  - Format conversion  
+  - Supplementing geographic data (coordinates) based on addresses  
+  - Adding a distance vector from the city center (Main Market Square) based on geographic data  
+
+### Analyses  
+- Descriptive statistics  
+- Hedonic regression  
+- Correlation matrix (identifying factors influencing real estate prices)  
+- Spatial analysis  
+
+### Modeling  
+- Comparison of different models for predicting real estate prices based on selected features.  
+
+### (Expected) Results  
+- Understanding which real estate features have the most significant impact on listing prices in Kraków.  
+- Identifying potential price trends in different districts.  
 
 
-### Autorzy
-Katarzyna Dębowska
+### Table of Contents  
+1. [Understanding the Data](#understanding-the-data)  
 
-Kacper Sobczyk
+   1.1. [Data Collection](#data-collection)  
 
-Piotr Urbańczyk
+   1.2. [Data Description](#data-description)  
 
-    
-   ### Abstrakt
-Projekt ma na celu zrozumienie zależności między cechami mieszkań a ich cenami ofertowymi na lokalnym rynku nieruchomości. W ramach prac przeprowadzimy statystykę opisową, regresję hedoniczną oraz analizę przestrzenną w celu zidentyfikowania najważniejszych czynników wpływających na cenę mieszkań w Krakowie.
+   1.3. [Initial Data Quality Assessment](#initial-data-quality-assessment)  
+
+2. [Data Preparation](#data-preparation)  
+
+   2.1. [Column Operations](#column-operations)  
+
+   2.2. [Examples of Expert Knowledge Application](#examples-of-expert-knowledge-application)  
+
+   2.3. [Data Quality Verification](#data-quality-verification)  
+
+   2.4. [Data Engineering](#data-engineering)  
+
+   2.5. [Data Exploration](#data-exploration)  
+
+3. [Data Analysis](#data-analysis)  
+
+   3.1. [Correlation Matrix (Pearson Matrix)](#correlation-matrix-pearson-matrix)  
+
+   3.2. [Analysis of Apartment Prices in Different Districts](#analysis-of-apartment-prices-in-different-districts)  
+
+   3.3. [Principal Component Analysis (PCA)](#principal-component-analysis-pca)  
+
+   3.4. [Feature Selection](#feature-selection)  
+
+4. [Modeling](#modeling)  
+
+   4.1. [Model Evaluation](#model-evaluation)  
+
+   4.2. [Prediction Results](#prediction-results)  
+
+5. [Data Visualization in the Spatial Component](#data-visualization-in-the-spatial-component)  
+
+
    
-- **Dane**: Wykorzystano zbiór danych zawierający informacje o ofertach sprzedaży nieruchomości.
-- **Źródło danych**: Dane zostały wyekstrahowane za pomocą metod automatycznych z dwóch popularnych portali zawierających oferty sprzedaży nieruchomości.
-- **Przygotowanie danych**: Zrozumienie danych, usuwanie brakujących wartości, uspójnienie, konwersja formatów, uzupełnienie danych geograficznych (koordynatów) na postawie adresu, dodanie (wektora) odległości od centrum miasta (Rynku Głównego) na podstawie danych geograficznych.
-- **Analizy**: Statystyka opisowa, regresja hedoniczna, macierz korelacji (identyfikacja czynników wpływających na cenę nieruchomości), analiza przestrzenna.
-- **Modelowanie**: Porównanie działania różnych modeli w zadaniu predykcji cen nieruchomości na podstawie wyselekcjonowanych cech.
-- **(Oczekiwane) wyniki**: Zrozumienie, które cechy nieruchomości najbardziej wpływają na cenę ofertową mieszkań w Krakowie, wykrycie ewentualnych trendów cenowych w poszczególnych dzielnicach.
+## Understanding the Data  
+The project utilizes a dataset containing information on apartment sale listings in Kraków.  
 
-### Spis treści
-1. [Zrozumienie danych](#zrozumienie-danych)
+### Data Collection  
 
-	1.1. [Gromadzenie danych](#gromadzenie-danych)
+#### Data Source  
+The data was obtained using automated methods from publicly accessible sources—two popular real estate listing platforms: [nieruchomości-online.pl](nieruchomości-online.pl) and [otodom.pl](otodom.pl).  
 
-	1.2. [Opis danych](#opis-danych)
+#### Data Acquisition Methods  
+Both datasets were collected using a professional, dedicated web scraping solution written in `Scala`, which, in the case of dynamic crawling, utilizes the `Selenium` platform.  
 
-	1.3. [Wstępna ocena jakości danych](#wstępna-ocena-jakości-danych)
-2. [Przygotowanie danych](#przygotowanie-danych)
-
-	2.1. [Operacje na kolumnach](#operacje-na-kolumnach)
-
-	2.2. [Przykłady zastosowania wiedzy eksperckiej](#przykłady-zastosowania-wiedzy-eksperckiej)
-
-	2.3. [Weryfikacja jakości danych](#weryfikacja-jakości-danych)
-
-	2.4. [Inżynieria danych](#inżynieria-danych)
-
-	2.5. [Eksploracja danych](#inżynieria-danych)
-3. [Analiza danych](#analiza-danych)
-
-	3.1. [Macierz korelacji (macierz Pearsona)](#macierz-korelacji-macierz-pearsona)
-
-	3.2. [Analiza cen mieszkań w różnych dzielnicach](#analiza-cen-mieszkań-w-różnych-dzielnicach)
-
-    3.3. [Analiza komponentów bazowych (PCA)](#analiza-komponentów-bazowych-pca)
-    
-	3.4. [Wybór cech](#wybór-cech)
-4. [Modelowanie](#modelowanie)
-   
-	4.1. [Ewaluacja modeli](#ewaluacja-modeli)
-   
-   	4.2. [Wyniki predykcji](#wyniki-predykcji)
-5. [Wizualizacja danych w komponencie przestrzennym](#wizualizacja-danych-w-komponencie-przestrzennym)
-
-
-
-
-   
-## Zrozumienie danych
-W projekcie wykorzystano zbiór danych zawierający informacje o ofertach sprzedaży mieszkań w Krakowie.
-### Gromadzenie danych
-#### Źródło danych
-Dane zostały pozyskane za pomocą metod automatycznych ze źródeł w swobodnym dostępie -- dwóch popularnych portali
-zawierających oferty sprzedaży nieruchomości: [nieruchomości-online.pl](nieruchomości-online.pl)
-oraz [otodom.pl](otodom.pl).
-
-#### Metody pozyskania danych
-Oba zbiory danych zostały pozyskane przy użyciu profesjonalnego dedykowanego rozwiązania do scrapingu treści z sieci
-Internet (pisanego w języku `Scala` a w przypadku crawli o charakterze dynamicznym wykorzystującego platformę `Selenium`).
-
-Przykładowy fragment pliku konfiguracyjnego:
+Example fragment of a configuration file:  
 ```json
 "extractionTemplate": {
     ".box-offer-top h1.h1Title": {
@@ -90,7 +105,7 @@ Przykładowy fragment pliku konfiguracyjnego:
     }
 }
 ```
-Przykładowy fragment wyników crawli w formacie `json`:
+Example fragment of crawl results in `json` format::
 ```json
 "url": "https://krakow.nieruchomosci-online.pl/mieszkanie,na-sprzedaz/24679599.html",
 "results": [
@@ -109,26 +124,24 @@ Przykładowy fragment wyników crawli w formacie `json`:
 	}
 ],
 ```
-Dane zostały następnie przekonwertowane do formatu `csv` (za pomocą prostego skryptu w języku `Python`).
+The data was then converted into `csv` format using a simple `Python` script.
 
-### Opis danych
+### Data Description  
 
-Dane zostały zebrane pięciokrotnie w okresie od 08.03.2024 do 05.05.2024 z interwałem dwutygotniowym
-dla obu źródeł danych (nieruchomości-online.pl, otodom.pl) osobno. 
+The data was collected five times between 08.03.2024 and 05.05.2024 at two-week intervals for both data sources (`nieruchomości-online.pl`, `otodom.pl`) separately.  
 
-##### nieruchomosci-online dataset
-Pliki otrzymane ze źródła nieuchomości-online.pl zawierają 13 kolumn: `'url', 'name/title', 'address', 'price', 'area', 'price-per-area',
-       'floor/store', 'no of floors/stores in the building', 'no of rooms',
-       'year of construction', 'parking space', 'market', 'form of ownership'`.
+##### nieruchomosci-online Dataset  
+The files obtained from `nieruchomości-online.pl` contain 13 columns:  
+`'url', 'name/title', 'address', 'price', 'area', 'price-per-area', 'floor/store', 'no of floors/stories in the building', 'no of rooms', 'year of construction', 'parking space', 'market', 'form of ownership'`.  
 
-- Plik `2024-03-08-nieruchomosci-online_dataset_raw.csv` zawiera 3949 wierszy (bez nagłówka). 
-- Plik `2024-03-25-nieruchomosci-online-full_raw_dataset.csv` zawiera 3348 wierszy (bez nagłówka). 
-- Plik `2024-04-07-nieruchomosci-online_full_raw_dataset.csv` zawiera 4141 wierszy (bez nagłówka). 
-- Plik `2024-04-21-nieruchomosci-online_full_raw_dataset.csv` zawiera 6185 wierszy (bez nagłówka). 
-- Plik `2024-05-05-nieruchomosci-online_full_raw_dataset.csv` zawiera 6182 wierszy (bez nagłówka).
+- The file `2024-03-08-nieruchomosci-online_dataset_raw.csv` contains **3,949** rows (excluding the header).  
+- The file `2024-03-25-nieruchomosci-online-full_raw_dataset.csv` contains **3,348** rows (excluding the header).  
+- The file `2024-04-07-nieruchomosci-online_full_raw_dataset.csv` contains **4,141** rows (excluding the header).  
+- The file `2024-04-21-nieruchomosci-online_full_raw_dataset.csv` contains **6,185** rows (excluding the header).  
+- The file `2024-05-05-nieruchomosci-online_full_raw_dataset.csv` contains **6,182** rows (excluding the header).  
 
-Dataframe, który został utworzony w wyniku scalenia powyższych plików
-(zaktualizowania zmienionych i dodania nowych ofert), zawiera 9 659 wierszy.
+The **dataframe**, created by merging the above files (updating changed listings and adding new ones), contains **9,659** rows.  
+
 
 ```python
 >>> 2024-03-08-nieruchomosci-online_dataset_raw.csv.size
@@ -172,22 +185,19 @@ memory usage: 401.2+ KB
 9  https://krakow.nieruchomosci-online.pl/mieszka...   Apartament, ul. Szablowskiego  ...                                             wtórny  własność, księga wieczysta
 ```
 
-##### otodom_dataset
+##### otodom Dataset  
 
-Pliki otrzymane ze źródła otodom.pl zawierają 20 kolumn: `'url', 'name/title', 'address', 'price', 'area', 'price-per-area',
-       'floor/store', 'no of rooms', 'year of construction', 'parking space',
-       'market', 'form of ownership', 'condition', 'rent', 'heating',
-       'advertiser type', 'elevator', 'outdoor area', 'building type',
-       'building material'`
+The files obtained from `otodom.pl` contain 20 columns:  
+`'url', 'name/title', 'address', 'price', 'area', 'price-per-area', 'floor/store', 'no of rooms', 'year of construction', 'parking space', 'market', 'form of ownership', 'condition', 'rent', 'heating', 'advertiser type', 'elevator', 'outdoor area', 'building type', 'building material'`.  
 
-- Plik `2024-03-08-otodom_dataset_raw.csv` zawiera 6819 wierszy (bez nagłówka).
-- Plik `2024-03-25-otodom-full_raw_dataset.csv` zawiera 7130 wierszy (bez nagłówka).
-- Plik `2024-04-07-otodom_full_raw_dataset.csv` zawiera 7148 wierszy (bez nagłówka).
-- Plik `2024-04-21-otodom_full_raw_dataset.csv` zawiera 7436 wierszy (bez nagłówka).
-- Plik `2024-05-05-otodom-full_raw_dataset.csv` zawiera 7465 wierszy (bez nagłówka).
+- The file `2024-03-08-otodom_dataset_raw.csv` contains **6,819** rows (excluding the header).  
+- The file `2024-03-25-otodom-full_raw_dataset.csv` contains **7,130** rows (excluding the header).  
+- The file `2024-04-07-otodom_full_raw_dataset.csv` contains **7,148** rows (excluding the header).  
+- The file `2024-04-21-otodom_full_raw_dataset.csv` contains **7,436** rows (excluding the header).  
+- The file `2024-05-05-otodom-full_raw_dataset.csv` contains **7,465** rows (excluding the header).  
 
-Dataframe, który został utworzony w wyniku scalenia powyższych plików
-(zaktualizowania zmienionych i dodania nowych ofert), zawiera 14 171 wierszy.
+The **dataframe**, created by merging the above files (updating changed listings and adding new ones), contains **14,171** rows.  
+
 
 ```python
 >>> 2024-03-08-otodom_dataset_raw.csv.size
@@ -239,142 +249,134 @@ memory usage: 1.0+ MB
 9  https://www.otodom.pl/pl/oferta/3-pokoje-z-ust...    3 pokoje z ustawnym salonem | Dobra komunikacja  ...             blok   brak informacji
 ```
 
-### Wstępna ocena jakości danych
+### Preliminary Data Quality Assessment  
 
-- Ponieważ serwis orodom.pl umożliwiał zebranie większej liczby informacji o oferowanych nieruchomościach, dane pochodzące z tego serwisu zawierają więcej cech (kolumn).
-- Informacja o piętrze, na którym znajduje się nieruchomość, w zbiorze `nieruchomosci-online_dataset_raw.csv` zawarta jest w dwóch kolumnach *floor/store* oraz *no of floors/stores in the building*. Ta sama informacja w zbiorze `otodom_dataset_raw.csv` zawarta jest w jednej kolumnie -- *floor/store* i przybiera postać postać [piętro]/[liczba pięter], np. "1/5". W przypadku potrzeby wspólnej analizy obu zbiorów, dane powinny zostać ujednolicone.
-- Z uwagi na pochodzenie danych, większość kulumn w obu zbiorach zawiera dane tekstowe, wymagające konwersji w celu dalszych analiz.
-- Z uwagi na sposób pozyskania danych, zbiór `nieruchomosci-online_dataset_raw.csv` zawiera pewną liczbę niepoprawnych wierszy wynikających z nietypowego ustawienia selektorów na stronie zawierającej ogłoszenie o sprzedaży. Dotyczy to zwłaszcza nieruchomości z rynku pierwotnego. Dane w tych wierszach będą musiały zostać odtworzone lub usunięte.
-- W niewielkiej liczbie przypadków dane o nieruchomościach z rynku pierwotnego nie zawierają ceny (wybrano opcję "Zapytaj o ofertę").
-- W niewielkiej liczbie przypadków cena w ofercie podana jest w innej walucie (euro).
-- Z uwagi na charakter rynku (działania pośredników i agencji) oraz stron zawierających oferty sprzedaży nieruchomości, oba zbiory zawierają potencjalnie wiele wierszy dotyczących tego samego mieszkania (potencjalne "duplikaty" ofert pochodzące od różnych pośredników).
-- Z uwagi na charakter rynku (ukrywanie dokładnego adresu nieruchomości przez pośredników i agencje), informacje o położeniu nieruchomości są najczęściej niezbyt dokładne. Ta niedokładność nie będzie raczej uniemożliwiała potencjalne analizy lub modelowanie z komponentem przestrzennym/geograficznym.
-- Z podobnego powodu zbiory mogą zawierać nieruchomości położone poza Krakowem (mieszkania ze Skawiny czy Wieliczki są często umieszczane w tych serwisach jako mieszkania z Krakowa/obrzeży Krakowa).
-
-
-## Przygotowanie danych
-W początkowej fazie projektu skoncentrowaliśmy się na oczyszczaniu i przygotowaniu zgromadzonych danych.
-Usunęliśmy brakujące i błędne wartości, ujednoliciliśmy formaty danych, przekonwertowaliśmy typy danych
-oraz uzupełniliśmy wartości tam,
-gdzie było to niezbędne. W końcu, dodaliśmy dane geograficzne, które pozwoliły na analizę i modelowanie danych
-o nieruchomościach w komponencie geograficznym.
-
-W celu modelowania i analiz w komponencie przestrzennym
-dane zebrane w różnych terminach zostały zageregowane w obrębie jednego zbioru (dla obu źródeł).
-Dane zmienione zostały zaktualizowanea a dane pochodzące z nowych ofert były dołączane do zbioru.
-
-### Operacje na kolumnach
-
-#### Cena
-W obu zbiorach przeprowadzono podobne operacje.
-Usunięto brakujące dane ("Zapytaj o cenę") oraz wartości niestandardowe, takie jak ceny
-w innych walutach. Wartości zostały przekonwertowane na zmiennopozycyjny typ liczbowy.
-Również przeliczono ceny podane w innych walutach na złotówki – w przypadku zbioru otodom za pomocą iloczynu
-podanej w złotówkach wartości `price-per-area` i `area`, a w przypadku zbioru nieruchomosci-online
-korzystając z aktualnych kursów wymiany (aktualna średnia w 50-ciodniowym oknie ruchomym z bibiloteki `yfinance`).
-
-#### Powierzchnia, cena za metr
- Zamiana wartości z formatu tekstowego na numeryczny, usunięcie jednostek ("m²", "zł/m²"). Usunięto wiersze
-zawierające z ofertami nieruchomości o powierzchni powyżej 200 m²
- oraz (jednoczeńnie) cenie poniżej 11 000 zł/m² elimunując w ten sposób oferty strychów,
- lokali usługowych, całych pięter (i pomyłki).
-
-####  Piętro, liczba pięter w budynku
-W przypadku zbioru otodom: rozdzielono informacje o piętrze i liczbie pięter w budynku w celu uspójnienia zbiorów.
-W obu zbiorach:
-konwersja na typy całkowitoliczbowe, zamiana tekstowych opisów pięter na wartości liczbowe
-("parter" na 0, "suterena" na -1).
-
-#### Liczba pokoi,
-Standaryzacja danych o liczbie pokoi, konwersja na typ całowitoliczbowy. W zbiorze nieruchoności-online usunięto wiersze
-z brakującymi danymi wynikającymi z przesunięcia selektorów na niektórych stronach z ofertami z rynku pierwotnego
-(co spowodowało niepoprawny scrapping).
-
-#### Rok budowy
-W obu zbiorach podobne kroki weryfikacji i czyszczenia danych: konwersja roku budowy na typ całowitoliczbowy;
-w przypadku oczywistych pomyłek ("literówek"):
-zmiana nierealistycznych wartości (lata
-bardzo odległe w czasie) wynikających z niepoprawnego ręcznego wprowadzenia danych o nieruchomości w ofercie
-(czynnik ludzki), w pozostałych przypadkach usunięcie takich danych.
+- Since the `otodom.pl` platform allows for collecting a greater amount of property-related information, data from this source contains more features (columns).  
+- The information about the floor on which a property is located is represented differently in the datasets:  
+  - In `nieruchomosci-online_dataset_raw.csv`, it is split into two columns: *floor/store* and *no of floors/stores in the building*.  
+  - In `otodom_dataset_raw.csv`, it is combined into a single column *floor/store* in the format [floor]/[total floors], e.g., "1/5".  
+  - For a unified analysis of both datasets, this discrepancy should be standardized.  
+- Due to the data sources, most columns in both datasets contain textual data, which requires conversion for further analysis.  
+- Due to the data collection method, `nieruchomosci-online_dataset_raw.csv` contains some incorrect rows caused by atypical selector configurations on the listing pages. This issue is especially present in listings for new developments. These rows will need to be corrected or removed.  
+- In a small number of cases, listings for new developments do not include a price (instead, they display "Ask for price").  
+- In a small number of cases, the price is provided in a different currency (euros).  
+- Due to the nature of the market (real estate agents and intermediaries), both datasets likely contain multiple listings for the same apartment (potential "duplicates" from different agents).  
+- Due to the market's characteristics (agents and intermediaries hiding exact property addresses), location data is often imprecise. However, this imprecision is unlikely to significantly hinder spatial/geographical analysis or modeling.  
+- For the same reason, the datasets may include properties located outside Kraków—listings from nearby cities like Skawina or Wieliczka are often categorized as Kraków or Kraków suburbs.  
 
 
-#### Miejsce parkingowe
-W przypadku zbioru otodom: konwersja danych katergorialnych ("tak"/"nie") na wartość boolowską. W przypadku zbioru
-nieruchomości-online dane kategoryczne były silniej rozgranulowane (np. "przynależne miejsce parkingowe",
-"garaż podziemny", "brak" itp.). Kolumna ta została jednczocześnie: 1) znormalizowana i
-skopiowana do nowej (parking space details) by nie utracić głębokości danych przy oddzielnym analizowaniu zbioru oraz 2)
-przekonwertowana na typ boolowski w celu dalszego uspójnienia zbiorów.
+## Data Preparation  
 
-#### Rynek
-W obu zbiorach: zunifikowano wartości w kolumnie 'market' przez zamianę zróżnicowanych opisów na standardowe etykiety
-('pierwotny', 'wtórny'). Uzupełnienie brakujących danych na podstawie roku budowy – obiekty
-z rokiem budowy powyżej 2022 zostały automatycznie zaklasyfikowane jako 'pierwotny', pozostałe jako 'wtórny'.
+In the initial phase of the project, we focused on cleaning and preparing the collected data.  
+We removed missing and incorrect values, standardized data formats, converted data types,  
+and filled in missing values where necessary. Finally, we added geographic data,  
+which enabled the analysis and modeling of real estate data in a geographic component.  
 
-#### Forma własności
-W kolumnie 'form of ownership' przeprowadzono mapowanie różnych form własności do bardziej jednolitych kategorii.
-Uzupełniono również brakujące wartości na podstawie roku budowy (patrz niżej).
+To facilitate spatial modeling and analysis, data collected at different times were aggregated into a single dataset (for both sources).  
+Modified data were updated, and new listings were appended to the dataset.  
 
-#### Dodatkowe kolumny w zbiorze Otodom
-- **czynsz**: Przekonwertowano wartości czynszu na typ liczbowy, przeliczono wartości w innych walutach na podstawie
-średnich wartości aktualnych kursów wymiany (średnia w 50-ciodniowym oknie ruchomym).
-- **ogrzewanie, typ ogłoszeniodawcy, winda, przestrzeń zewnętrzna, typ budynku, materiał budowlany**:
-Ujednolicenie kategorii, konwersja na typy liczbowe lub boolowskie tam, gdzie to było zasadne i możliwe,
-usunięcie niestandardowych wpisów.
+### Column Operations  
+
+#### Price  
+Similar operations were performed in both datasets.  
+Missing data ("Ask for price") and non-standard values, such as prices in other currencies, were removed.  
+All values were converted to floating-point numbers.  
+Prices given in other currencies were converted to Polish zloty (PLN) as follows:  
+- In the *otodom* dataset: using the product of the listed `price-per-area` and `area`.  
+- In the *nieruchomosci-online* dataset: using the current exchange rates (based on a 50-day moving average from the `yfinance` library).  
+
+#### Area, Price per Square Meter  
+Converted values from text format to numeric, removing units ("m²", "zł/m²").  
+Rows containing properties larger than 200 m² *and* priced below 11,000 PLN/m² were removed  
+to eliminate attic spaces, commercial units, entire floors, and incorrect listings.  
+
+#### Floor, Number of Floors in the Building  
+- In the *otodom* dataset: the information about the floor and total number of floors was split into separate columns for consistency.  
+- In both datasets: converted to integer types, replacing textual descriptions with numerical values  
+  (e.g., "ground floor" → 0, "basement" → -1).  
+
+#### Number of Rooms  
+Standardized room count data and converted to integer type.  
+In the *nieruchomosci-online* dataset, rows with missing data due to misaligned selectors on some primary market listing pages  
+(which caused incorrect scraping) were removed.  
+
+#### Year of Construction  
+Similar data verification and cleaning steps were applied in both datasets:  
+- Converted the year of construction to an integer type.  
+- Obvious errors (typos) were corrected by adjusting unrealistic values  
+  (e.g., extreme years caused by incorrect manual data entry in listings).  
+- In other cases, erroneous data were removed.  
+
+#### Parking Space  
+- In the *otodom* dataset: categorical values ("yes"/"no") were converted to boolean values.  
+- In the *nieruchomosci-online* dataset: categorical data were more detailed  
+  (e.g., "designated parking space," "underground garage," "none").  
+  This column was:  
+  1) **Normalized and copied** into a new column (*parking space details*) to retain data granularity  
+     for independent dataset analysis.  
+  2) **Converted to a boolean type** for further dataset unification.  
+
+#### Market Type  
+In both datasets, values in the 'market' column were standardized by mapping varied descriptions  
+to uniform labels ('primary', 'secondary').  
+Missing values were inferred based on the year of construction:  
+- Properties built after 2022 were automatically classified as 'primary'.  
+- Others were labeled as 'secondary'.
 
 
+### Examples of Applying Expert Knowledge  
 
-### Przykłady zastosowania wiedzy eksperckiej
+#### Aligning the Number of Floors with the Tallest Buildings in Kraków  
+Data were filtered to eliminate properties listing more floors than the tallest residential buildings in Kraków,  
+thereby removing listings originating from abroad.  
 
-#### Uzgodnienie liczby pięter z najwyższymi budynkami w Krakowie
-Przefiltrowano dane eliminując nieruchomości, które podają większą liczbę pięter niż najwyższe mieszkalne budynki
-w Krakowie, usuwając w ten sposób oferty nieruchomości pochodzących zza granicy.
+#### Adjusting Ownership Type to Comply with Current Law  
+Since 2007, building regulations have prohibited the establishment of cooperative ownership rights  
+for newly constructed buildings. Listings for apartments built after this date were updated  
+to have the default ownership type 'full ownership'.  
 
-#### Dostosowanie formy własności do obowiązującego prawa
+#### Legal Requirement for Elevator Installation in Tall Buildings  
+According to building regulations in effect since the 1960s, an elevator is mandatory in buildings exceeding 9.5m in height.  
+This requirement is directly linked (via minimum floor height) to a specific number of floors.  
+As a result, missing elevator presence data were filled in for buildings with more than (or fewer than) four floors.  
 
-Obowiązujące od 2007 roku prawo budowlane wykluczyło możliwość ustanawiania
-spółdzielczego własnościowego prawa do lokalu dla budynków zbudowanych.
-Dane z ofert mieszkań wybudowanych po tym terminie zostały uzupełnione o domyślną formę własności 'pełna własność'.
-
-#### Prawny wymóg instalacji windy w wysokich budynkach
-
-Zgodnie z prawem budowlanym obwiązującym od lat 60. winda jest obowiązkowo montowana w budynkach powyżej 9,5m,
-co z kolei związane jest jest (per minimalna wysokośćkondygnacji) z określną liczbą pięter. W konsekwencji, brakujące
-dane dotyczące (nie)obecności windy zostały uzupełnione dla budynków powyżej (i poniżej) 4 pięter.
-
-#### Klasyfikacja typu ogłoszeniodawcy
-
-Założono, że jeśli typ ogłoszeniodawcy nie jest podany, domyślnie jest to biuro nieruchomości. Założonie to
-jest motywowane dwojako: 1) Osoby prywatne zazwyczaj
-chętnie podają tę informację w ofertach; 2) Z drugiej strony "biuro nieruchomości" to także najczęściej występując
-kategori w tej kolumnie. W konsekwncji, przypisano odpowiednią domyślną wartość dla brakujących danych.
+#### Classification of Advertiser Type  
+If the advertiser type was not specified, it was assumed to be a real estate agency.  
+This assumption is based on two factors:  
+1) Private individuals typically provide this information in their listings.  
+2) "Real estate agency" is the most common category in this column.  
+Consequently, the appropriate default value was assigned to missing data.  
 
 
 
-#### Eksploracja danych
-- **Analizy statystyczne**: Wykonaliśmy podstawowe analizy statystyczne, w tym obliczenie średnich, median,
-a także przeprowadzenie analizy rozkładów wartości w kluczowych kolumnach,
-co pomogło nam zrozumieć charakterystyki cenowe i lokalizacyjne rynku.
+#### Data Exploration  
+- **Statistical Analysis**: We conducted basic statistical analyses, including calculating means, medians,  
+and analyzing the distribution of values in key columns. This helped us understand  
+the pricing and location characteristics of the market.  
 
-### Inżynieria danych
+### Data Engineering  
 
-#### Integracja danych i usuwanie duplikatów
-Odpowiednie przygotowanie danych umożliwiło połączone ich w jeden zbiór.
-Dane zostały następnie poddane inżynierii.
-Pierwszy etap polegał na usunięciu duplikatów.
+#### Data Integration and Duplicate Removal  
+Proper data preparation allowed for merging all data into a single dataset.  
+The data were then processed further through engineering techniques.  
+The first step was the removal of duplicates.  
 
-Etap ten był konieczny z dwóch powodów: 1) Po pierwsze usupójniony zbiór siłą rzeczy mógł
-zawierać informacje o tym samym mieszkaniu pochodzącą z dwóch różnych źródeł. 2) Po drugie,
-zgodnie naszą wstępną oceną jakości danych, nawet w obrębie jednego źródła można było odnaleźć
-ogłoszenia dot. tego samego mieszkania wprowadzone przez różnych pośredników nieruchomości.
+This step was necessary for two reasons:  
+1) Since the unified dataset naturally contained information about the same apartment  
+from two different sources.  
+2) According to our preliminary data quality assessment, even within a single source,  
+we could find listings for the same apartment posted by different real estate agents.  
 
-Takie "duplikaty" staraliśmy się zindentyfikować używając unikalnych identyfikatorów
-nieruchomości (iloczyn kartezjański cech: adres, liczba pojoi, piętro, liczba pięter w budynku). Za duplikaty
-uznane zostały te nieruchomości, które były tożsame pod względem powyższych
-wartości oraz posiadały "dostatecznie bliskie" wartości
-ceny i metrażu. Za "dostatecznie bliskie" przyjęto wysokość 1% średniej wartości danej cechy.
-Następnie spośród duplikatów został wybrany ten, który miał mniej braków danych.
-Gdy było to możliwe, brakujące dane wybranego egzemplarza grupy były uzupełniane
-na podstawie danych pochodzących od innych (odrzucanych) członków grupy.
+We identified such "duplicates" using unique property identifiers,  
+which were determined as the Cartesian product of features: address, number of rooms, floor,  
+and total number of floors in the building.  
+Properties were considered duplicates if they matched on these characteristics  
+and had "sufficiently close" values for price and area.  
+"Sufficiently close" was defined as within 1% of the average value of the given feature.  
+
+Among the identified duplicates, the listing with the fewest missing values was retained.  
+Whenever possible, missing data in the selected record were supplemented  
+using information from the discarded duplicates.  
 
 ```python
 def check_similarity(group):
@@ -407,11 +409,12 @@ def remove_duplicates(df, group_cols=None):
     return sorted_filtered_df
 ```
 
-#### Uzupełnianie danych adresowych i tworzenie danych geolokacyjnych
-Czasem w tytule ogłoszenia zawarta była bardziej szczegółowa informacja adresowa,
-niż w kolumnie (a pierwotnie w selektorze) z adresem.
-Takie przypadku były identyfikowane i uzupełniane za pomocą wzorca wyrażenia regularnego.
-W analogiczny sposób przeprowadzono czyszczenie kolumny zawierającej adres w celu ułatwienia geolokacji.
+#### Filling in Address Data and Creating Geolocation Data
+Sometimes, the title of the listing contained more detailed address information  
+than the column (originally in the selector) with the address.  
+Such cases were identified and completed using a regular expression pattern.  
+Similarly, the address column was cleaned to facilitate geolocation.
+
 
 ```python
 pattern = r'(ul\.|Aleja|aleja|pl\.|al\.)\s*([^,\d]+[\d]*\b)'
@@ -434,10 +437,10 @@ def update_address(row):
     return updated_address
 ```
 
-Następnie za pomocą zewnętrzengo API przekształcono adresy na dane geograficzne
-(szczegółowa lokacja oraz szerokość i długość geograficzna),
-co oworzyło możliwość analizy zależności cenowych oraz danych o nieruchomościach (oraz oraz modelowania)
-w komponencie przestrzennym.
+Then, using an external API, the addresses were converted into geographic data
+(detailed location and latitude and longitude),
+which enabled the analysis of price dependencies and property data (as well as modeling)
+in the spatial component.
 
 ```python
 def geocode(address):
@@ -445,39 +448,27 @@ def geocode(address):
   return pd.Series([location.address, location.latitude, location.longitude])
 ```
 
-Z w ten sposób stworzonych danych obliczono za
-pomocą [wzoru _haversine_](https://en.wikipedia.org/wiki/Haversine_formula) odległość
-od centrum Krakowa.
-A także – znów przy pomocy regexa – wyciągnięto do nowej kolumny informację o dzielnicy.
-Usunięto wiersze z danymi pochodzącymi z ofert spoza Krakowa.
+The distance from the center of Krakow was then calculated using the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula) on the data created in this way.  
+Additionally, using regex again, the district information was extracted into a new column.  
+Rows with data from offers outside of Krakow were removed.
 
 
-### Weryfikacja jakości danych
-Zintegrowany zbiór danych oraz zbiór nieruchomości-online zawierały braki w kolumnach z rokiem budowy
-i formą własności. Zbiór Otodom posiadał także braki w kolumnach z czynszem, ogrzewaniem oraz stanem
-mieszkania.
 
-W celu umożliwienia modelowania i predykcji, dane zostały uzupełnione. Przyjęto następujące strategie
-uzupełniania danych:
-- **Dane numeryczne** (rok budowy, czynsz) uzupełniono na podstawie statystyk opisowych – średniej
-wartości, po uprzednim odrzuceniu wartości odstających za pomocą wariancji metody IQR (ćwiartkowego
-rozstępu).
-- **Dane o formie własności** uzupełniono kategorią "pełna własność", co jest uzasadnione dwoma
-faktami: była to najczęściej pojawiająca się kategoria oraz jest to logiczne założenie, że
-domyślną formą własności przy sprzedaży mieszkania jest pełna własność. Każdy inny rodzaj własności,
-taki jak udział czy spółdzielcze własnościowe prawo do użytkowania, powinien być (i zakładamy,
-że jest) wyraźnie zaznaczony,
-aby uniknąć wprowadzenia kupującego w błąd.
-- **Brakujące dane kategorialne** w zbiorze Otodom (ogrzewanie oraz stan mieszkania) zostały uzupełnione
-kategorią "brak informacji". Zakłada się, że taka klasyfikacja nie wpłynie znacząco na predykcje
-modeli, a wartość ta pojawiała się już w innych miejscach tego zbioru (ponieważ znajdowała się bezpośrednio
-w źródłach danych).
+### Data Quality Verification
+
+The integrated dataset and the online property dataset contained missing values in the columns for the year of construction and ownership type. The Otodom dataset also had missing values in the columns for rent, heating, and apartment condition.
+
+To enable modeling and prediction, the data was completed. The following data imputation strategies were applied:
+- **Numeric data** (year of construction, rent) was completed based on descriptive statistics – the mean value, after outliers were removed using the IQR (Interquartile Range) method.
+- **Ownership type data** was completed with the category "full ownership," justified by two facts: it was the most frequently occurring category, and it is a logical assumption that the default form of ownership when selling an apartment is full ownership. Any other form of ownership, such as a share or cooperative ownership rights, should (and we assume it is) clearly marked to avoid misleading the buyer.
+- **Missing categorical data** in the Otodom dataset (heating and apartment condition) was completed with the category "no information." It is assumed that this classification will not significantly affect the model predictions, and this value appeared in other parts of the dataset (as it was directly present in the data sources).
 
 
-## Analiza danych
 
-### Macierz korelacji (macierz Pearsona)
-Do analizy macierzy korelacji dla uwspólnionego zbioru danych wybrano następujące cechy:
+## Data Analysis
+
+### Correlation Matrix (Pearson Matrix)
+For the correlation matrix analysis of the unified dataset, the following features were selected:
 
 ![pearson.png](assets/pearson.png)
 
@@ -494,111 +485,98 @@ Do analizy macierzy korelacji dla uwspólnionego zbioru danych wybrano następuj
  7   market                               17932 non-null  int64  
  8   distance                             17932 non-null  float64
 ```
-W kolumnie *market* wartości *pierwotny*, *wtórny* zostały zamienione odpowiednio na 0 i 1.
+In the *market* column, the values *primary* and *secondary* were replaced with 0 and 1, respectively.
 
-#### Wnioski z analizy korelacji
-Poza oczywistymi zależnościami takimi jak liczba pokoi i wielkość mieszkania, roku budowy i rodzaj rynku czy liczba pięter w budynku i piętro, na którym znajduje się miszkanie widać wyraźnie negatywną korelację pomiędzy ceną za m^2 mieszkania a odległością od centrum, co potwierdza nasze przypuszczenia, że wraz ze wzrostem odległości od centrum spada cena mieszkania. Nieco słabsze, ale zasługujące na uwagę korelację występują również pomiędzy rokiem budowy, a dostępnością miejsca parkingowego, co wskazuje na to, że nowsze mieszkania częściej mają dostęp do miejsca parkingowego. Na wykresie da się również zauważyć pozytywną korelację pomiędzy rokiem budowy a odległością od centrum, co potwierdza fakt, że nowe mieszkania z reguły powstają z dala od centrum miasta. 
+#### Correlation Analysis Findings
+In addition to obvious dependencies such as the number of rooms and apartment size, the year of construction and market type, or the number of floors in the building and the floor on which the apartment is located, there is a clear negative correlation between the price per m^2 of the apartment and the distance from the city center. This confirms our assumption that as the distance from the center increases, the apartment price decreases. A slightly weaker, but noteworthy correlation is also observed between the year of construction and the availability of parking spaces, suggesting that newer apartments are more likely to have access to parking. The chart also shows a positive correlation between the year of construction and the distance from the center, confirming the fact that new apartments are typically built further from the city center.
 
-### Analiza cen mieszkań w różnych dzielnicach
-Analiza cen mieszkań w różnych dzielnicach potwierdza wnioski płynące z macierzy korelacji. Najdroższe mieszkania znajdują się w centrum - Stare Miasto. Mieszkania na Starym Mieście charakteryzują się też największą rozpiętością cenową. Najtańśze mieszkania znajdują się w dzielnicach Swoszowice, Wzgórza Krzesławickie oraz Nowa Huta. 
+### Analysis of Apartment Prices in Different Districts
+The analysis of apartment prices in different districts confirms the findings from the correlation matrix. The most expensive apartments are located in the center - Old Town. Apartments in the Old Town also have the widest price range. The cheapest apartments are found in the districts of Swoszowice, Wzgórza Krzesławickie, and Nowa Huta.
+
 
 ![districts.png](assets/districts.png)
 
-### Analiza komponentów bazowych (PCA)
+### Principal Component Analysis (PCA)
 
 ![first_component.png](assets/first_component.png)
 
 ![second_component.png](assets/second_component.png)
 
-Analiza komponentów bazowych wykazała, że przy rzutowaniu na pierwszy komponent wiodący
-największe wartości wiążą się z cechami takimi jak liczba pokoi, miejsce parkingowe, rynek
-(wartość ujemna). Cechy te charakteryzują się największą zmiennością i mają największy wpływ na
-pierwszy komponent, jednak nie są to cechy kluczowe dla charakterystyki mieszkań. Dla drugiego
-komponentu bazowego największe wartości elementów odpowiadają cechom takim jak powierzchnia,
-liczba pokoi (wartości doddatnie) oraz rok budowy, ogległość od centrum (wartości ujemne).
-Cechy te w większym stopniu oddają chcarakterystykę mieszkań. 
+Principal Component Analysis (PCA) showed that when projecting onto the first leading component, the highest values are associated with features such as the number of rooms, parking space, and market type (negative value). These features exhibit the greatest variability and have the most significant impact on the first component, but they are not key characteristics of apartments. For the second base component, the highest values correspond to features such as area, number of rooms (positive values), and year of construction, distance from the center (negative values). These features more accurately reflect the characteristics of the apartments.
+
 
 ![biplot.png](assets/biplot.png)
 
 
-Istotnych informacji na temat zależności pomiędzy różnymi cechami mieszkań dostarcza
-wizualizacja wektorów cech zrzutowanych na dwa pierwsze komponenty wiodące. Na wykresie
-znajdują odzwierciedlenie pewne oczywiste korelacje, takie jak zależność pomiędzy powierzchnią
-mieszkania i liczbą pokoi, piętrem, na którym znajduje się miszkanie i liczbą pięter w budynku.
-Pomiędzy tymi parami cech widoczna jest z kolei zależność odwrotna, co wskazuje na to,
-że większe mieszkania częściej znajdują się w niższych budynkach. Potwirdza się również widoczna
-w macierzy korelacji odwrotna zależność pomiędzy ceną za m² mieszkania a odległością od centrum.
-Ponadto można zauważyć, że mieszkania z rynku pierwotnego znajdują się dalej od centrum,
-co w naturnalny sposób implikuje zależność pomiędzy rokiem budowy a odległością
-od centrum - nowe miszkania powstają z dala od centrum. Na uwagę zasługuje również
-slina korelacja pomiędzy ceną a rynkiem, z której wynika, że droższe mieszkania
-(w znaczeniu ceny za m²) pochodzą z rynku wtórnego, co może być tłumaczone poprzez fakt,
-że tego typu mieszkania z reguły są gotowe do zamieszkania w przeciwieństwie do mieszkań
-z rynku pierwotnego, które często wymagją wykończenia.
-Na wykresie widoczna jest również zależność pomiędzy rynkiem a parkingiem,
-z której można wyciągnąć wniosek, że mieszkania z rynku pierwotnego częściej
-są wyposażone w dedykowane miejsca postojowe.
+Important information regarding the relationships between various apartment features is provided by the visualization of feature vectors projected onto the first two leading components. The chart reflects some obvious correlations, such as the relationship between the apartment's area and the number of rooms, the floor the apartment is on, and the number of floors in the building. A reverse correlation is visible between these pairs of features, indicating that larger apartments are more often located in lower buildings. The inverse relationship between the price per m² of an apartment and the distance from the center, visible in the correlation matrix, is also confirmed. 
 
-### Wybór cech
-Na podstawie przeprowadzonych analiz, do budowy modeli wybrano następujące cechy: *area, price-per-area, floor/store, no of floors/stores in the building, no of rooms, year of construction, parking space, market, form of ownership, latitude, longitude distance* oraz *district*.
+Additionally, it can be observed that apartments from the primary market are located further from the center, which naturally implies a relationship between the year of construction and the distance from the center—new apartments are typically built farther from the center. Also noteworthy is the strong correlation between price and market type, which suggests that more expensive apartments (in terms of price per m²) come from the secondary market. This can be explained by the fact that such apartments are usually ready to move in, unlike apartments from the primary market, which often require finishing.
+
+The chart also shows a relationship between the market type and parking, from which it can be inferred that apartments from the primary market are more likely to come with dedicated parking spaces.
 
 
-## Modelowanie
+### Feature Selection
+Based on the conducted analyses, the following features were selected for building the models: *area, price-per-area, floor/store, number of floors/stores in the building, number of rooms, year of construction, parking space, market, form of ownership, latitude, longitude distance*, and *district*.
 
-Do predykcji cen mieszkań wykorzystano następujące modele:
+## Modeling
 
-- regresja liniowa
-- drzewa decyzyjne
-- lasy losowe
+The following models were used for predicting apartment prices:
+
+- Linear regression
+- Decision trees
+- Random forests
 - Gradient Boosting Machine (GBM)
 - LightGBM
 - CatBoost
 - XGBoost
 
-Parametry powyższych modeli zostały dobrane  przy użyciu bayesowskiej optymalizacji hiperparametrów. 
+The parameters for the above models were selected using Bayesian hyperparameter optimization.
 
-### Ewaluacja modeli
+### Model Evaluation
 
-Do oceny jakości predykcji modeli wykorzystano następujące metryki:
+The following metrics were used to assess the prediction quality of the models:
 
-- Średni błąd bezwzględny (Mean Absolute Error, MAE)
-- Pierwiastek z błędu średniokwadratowego (Root Mean Squared Error, RMSE)
-- Współczynnik determinacji (Coefficient of Determination, $R^2$ score)
-- Wskaźniki 10-procentowy i 20-procentowy (10% & 20% measure)
+- Mean Absolute Error (MAE)
+- Root Mean Squared Error (RMSE)
+- Coefficient of Determination ($R^2$ score)
+- 10% & 20% measure
 
-### Wyniki predykcji
+
+### Prediction results
 ![obraz](https://github.com/user-attachments/assets/2b038aed-de14-495d-9408-89eeba2b5cff)
 
-W powyższej tabeli uwzględniono dodatkowo wyniki modeli kombinowanych: 
+The above table also includes the results of combined models:
 
-- Super-GB - model zwracający średnią predykcji wszystkich modeli gradientowych
-- Weighted Super-GB - model zwracający rednią ważoną predykcji pozostałych modeli gradientowych
+- Super-GB - a model that returns the average prediction of all gradient models
+- Weighted Super-GB - a model that returns the weighted average prediction of the remaining gradient models
 
 
-## Wizualizacja danych w komponencie przestrzennym
+## Data Visualization in the Spatial Component
 
-Dane o krakowskich mieszkaniach zostały zwizualizowane w komponencie przestrzennym na interaktywnej mapie za pomocą frameworku Streamlit.
+Data about Krakow apartments were visualized in the spatial component on an interactive map using the `Streamlit` framework.
 
-![screen1_price](https://github.com/user-attachments/assets/1409d842-1858-4062-976f-90e720fc01b4)
-Analiza cen nieruchomości w zależności od odległości od centrum Krakowa
 
-![screen2_pricepa](https://github.com/user-attachments/assets/179bd37c-0d0a-4434-b29a-76122fa2f8e2)
-Analiza cen za metr kwadratowy nieruchomości w zależności od odległości od centrum Krakowa
+![screen1_price](https://github.com/user-attachments/assets/1409d842-1858-4062-976f-90e720fc01b4)  
+Analysis of property prices based on the distance from the center of Krakow.
 
-![screen3_area](https://github.com/user-attachments/assets/6cc5b237-31d9-43eb-baac-cd813bc48a9e)
-Analiza powierzchni nieruchomości w zależności od odległości od centrum Krakowa
+![screen2_pricepa](https://github.com/user-attachments/assets/179bd37c-0d0a-4434-b29a-76122fa2f8e2)  
+Analysis of price per square meter of property based on the distance from the center of Krakow.
 
-![screen4_age](https://github.com/user-attachments/assets/97697e51-5d36-4fd4-9230-2de4217f59d7)
-Analiza wieku budynków w zależności od odległości od centrum Krakowa
+![screen3_area](https://github.com/user-attachments/assets/6cc5b237-31d9-43eb-baac-cd813bc48a9e)  
+Analysis of property area based on the distance from the center of Krakow.
 
-![screen5_floors](https://github.com/user-attachments/assets/78c19817-30cc-470f-9c15-593c822be494)
-Analiza liczby pięter w budynkach w zależności od odległości od centrum Krakowa
+![screen4_age](https://github.com/user-attachments/assets/97697e51-5d36-4fd4-9230-2de4217f59d7)  
+Analysis of building age based on the distance from the center of Krakow.
 
-![screen6_parking](https://github.com/user-attachments/assets/ccfb0146-923c-4379-bcf6-61b41e0b1184)
-Analiza dostępności miejsc parkingowych w zależności od odległości od centrum Krakowa
+![screen5_floors](https://github.com/user-attachments/assets/78c19817-30cc-470f-9c15-593c822be494)  
+Analysis of the number of floors in buildings based on the distance from the center of Krakow.
 
-![screen7_offers](https://github.com/user-attachments/assets/d31286bc-1b1d-478a-88f1-a8a0440dd7f0)
-Analiza liczby ofert sprzedaży nieruchomości w zależności od odległości od centrum Krakowa
+![screen6_parking](https://github.com/user-attachments/assets/ccfb0146-923c-4379-bcf6-61b41e0b1184)  
+Analysis of parking space availability based on the distance from the center of Krakow.
+
+![screen7_offers](https://github.com/user-attachments/assets/d31286bc-1b1d-478a-88f1-a8a0440dd7f0)  
+Analysis of the number of property sale offers based on the distance from the center of Krakow.
+
 
 
 
